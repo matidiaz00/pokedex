@@ -4,44 +4,54 @@ function Filters({filters}) {
 
   return (
     <div className="Filters">
-      <div className="input-group">
-        <input type="text" placeholder="Search for pokemon name" className="form-control" aria-label="Dollar amount (with dot and two decimal places)" />
-        <span className="input-group-text">Search</span>
-      </div>
-      <div className="row pt-3 align-items-center">
-        <div className="col-3">
-          <div className='d-flex justify-content-between'>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-              <label className="form-check-label" htmlFor="flexSwitchCheckDefault">A-Z</label>
-            </div>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2" />
-              <label className="form-check-label" htmlFor="flexSwitchCheckDefault2">0-100</label>
-            </div>
-          </div>
+      <div className='d-flex w-100'>
+        <div className="input-group flex-grow-1">
+          <input type="text" placeholder="Search for pokemon name" className="form-control" aria-label="Dollar amount (with dot and two decimal places)" />
+          <button type="submit" className="input-group-text">
+            <i className="bi bi-search"></i>
+          </button>
         </div>
-        <div className="col-3">
+        <button type="button" className="btn btn-light ms-3">
+          <i className="bi bi-filter"></i>
+          {/*<i className="bi bi-x"></i>*/}
+        </button>
+      </div>
+      <div className="d-flex pt-3 justify-content-between align-items-center">
+        <div className='me-4'>
+          <input type="radio" className="btn-check" name="options" id="option1" autoComplete="off" />
+          <label className="btn btn-secondary" htmlFor="option1">
+            <i className="bi bi-sort-alpha-down"></i>
+            {/*<i className="bi bi-sort-alpha-up"></i>*/}
+          </label>
+        </div>
+        <div className='me-4'>
+          <input type="radio" className="btn-check" name="options" id="option2" autoComplete="off" />
+          <label className="btn btn-secondary" htmlFor="option2">
+            <i className="bi bi-sort-numeric-down"></i>
+            {/*<i className="bi bi-sort-numeric-up"></i>*/}
+          </label>
+        </div>
+        <div className='flex-fill pe-4'>
           <select className="form-select form-select-sm" aria-label=".form-select-sm example">
             <option defaultValue="">Type</option>
             {filters.type.map((data, i) => (
-              <option value={data} key={i} className="text-capitalize">{data}</option>
+              <option value={data.name} key={i} className="text-capitalize">{data.name}</option>
             ))}
           </select>
         </div>
-        <div className="col-3">
+        <div className='flex-fill pe-4'>
           <select className="form-select form-select-sm" aria-label=".form-select-sm example">
             <option defaultValue="">Ability</option>
             {filters.ability.map((data, i) => (
-              <option value={data} key={i} className="text-capitalize">{data}</option>
+              <option value={data.name} key={i} className="text-capitalize">{data.name}</option>
             ))}
           </select>
         </div>
-        <div className="col-3">
+        <div className='flex-fill'>
           <select className="form-select form-select-sm" aria-label=".form-select-sm example">
             <option defaultValue="">Move</option>
             {filters.move.map((data, i) => (
-              <option value={data} key={i} className="text-capitalize">{data}</option>
+              <option value={data.name} key={i} className="text-capitalize">{data.name}</option>
             ))}
           </select>
         </div>

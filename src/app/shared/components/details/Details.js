@@ -2,8 +2,6 @@ import React from 'react';
 
 function Details({data}) {
 
-  console.log(data)
-
   return (
     <div className="Details">
       <div className="card w-100">

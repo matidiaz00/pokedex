@@ -5,7 +5,7 @@ import ReactLogo from './logo.svg';
 function Header() {
 
   return (
-    <div className="Header d-none d-lg-block">
+    <div id="Header" className="d-none d-lg-block">
       <div className="container">
         <nav className="nav py-3 nav-pills justify-content-between align-items-center">
           <Link to="/pokedex" className="nav-link">Pokedex</Link>
