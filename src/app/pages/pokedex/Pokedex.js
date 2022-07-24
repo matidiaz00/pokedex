@@ -5,15 +5,16 @@ import Details from './../../shared/components/details/Details';
 
 function Pokedex() {
 
+  const [selectPoke, setSelectPoke] = useState(null);
   const [poke, setPoke] = useState([]);
   const [filters, setFilter] = useState({
-      name:null,
-      alphabet:0,
-      number:1,
-      type: [],
-      ability: [],
-      move: []
-    });
+    name:null,
+    alphabet:0,
+    number:1,
+    type: [],
+    ability: [],
+    move: []
+  });
 
   useEffect(() => {
     const filters = {type: [], ability: [], move: []};
@@ -66,6 +67,12 @@ function Pokedex() {
     getPokemons();
   }, []);
 
+  const getDetail = (id) => {
+    poke.filter(x => x.id === id).map(x => {
+      setSelectPoke(x)
+    })
+  }
+
   return (
     <div className="Pokedex">
       <div className='container'>
@@ -74,14 +81,20 @@ function Pokedex() {
             <Filters filters={filters} key={Math.random()} />
             <div className='row m-n3'>
               {poke.map((data, i) => (
-                <div className='col-6 col-md-4 py-3' id={data.id} key={data.id}>
+                <div 
+                  className='col-6 col-md-4 py-3'
+                  id={data.id} key={data.id}
+                  onClick={() => getDetail(data.id)}
+                >
                   <Item data={data} key={data.id} />
                 </div>
               ))}
             </div>
           </div>
           <div className='col-4 d-none d-lg-block'>
-            <Details />
+            {
+              selectPoke ? <Details data={selectPoke} key={selectPoke.id} /> : 'Select a pokemon'
+            }
           </div>
         </div>
       </div>
