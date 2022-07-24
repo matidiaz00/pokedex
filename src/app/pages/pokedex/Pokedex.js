@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Item from './../../shared/components/item/Item';
 import Filters from './../../shared/components/filters/Filters';
@@ -79,6 +79,10 @@ function Pokedex() {
     })
   }
 
+  const callback = useCallback((data) => {
+    console.log(data)
+  }, []);
+
   return (
     <div className="Pokedex">
       <div className='container'>
@@ -89,7 +93,10 @@ function Pokedex() {
               className={isFixed ? 'bg-white position-sticky top-0 w-100 py-2' : ''}
               style={{zIndex: 1}}
             >
-              <Filters filters={filters} />
+              <Filters
+                options={filters}
+                submit={callback}
+              />
             </div>
               <div className='row m-n3'>
                 {poke.map((data, i) => (
