@@ -1,11 +1,15 @@
 import React from 'react';
 
-function Item({data}) {
+function Item({data, pokeColors}) {
+
+  const setPokeColor = () => {
+    return pokeColors[data.types[0].type.name]
+  }
 
   return (
     <div className="Item">
       <div className='card'>
-        <div className="card-body">
+        <div className="card-body" style={{backgroundColor: setPokeColor()}}>
           <img src={data.sprites.other.home.front_default} className="mw-100 w-50" alt='pokemon' />
           <h5 className='card-title text-capitalize'>{data.name}</h5>
           <span className='card-subtitle mb-2 text-muted'>N°{data.id}</span>

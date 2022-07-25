@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 export const Input = React.forwardRef(({ onChange, name, label, icon }, ref) => (
     <>
@@ -19,22 +19,31 @@ export const Input = React.forwardRef(({ onChange, name, label, icon }, ref) => 
     </>
 ));
 
-export const CheckBox = React.forwardRef(({ onChange, name, icon }, ref) => (
+export const CheckBox = React.forwardRef(({ onChange, name, icon }, ref) => {
+
+    const [isActive, setIsActive] = useState(false);
+
+    const handleClick = (e) => {
+        setIsActive(current => !current);
+    };
+
+    return (
     <>
         <input
             type="checkbox"
             className="btn-check"
             name={name}
-            id="option1"
+            id={name}
             ref={ref} onChange={onChange}
-        /> 
-        <label className="btn btn-secondary" htmlFor="option1">
+        />
+        <label className="btn btn-secondary" htmlFor={name} onClick={handleClick}>
             {icon ?
-                <i className={`bi bi-${icon}-${ref.checked ? 'down' : 'up'}`}></i>
+                <i className={`bi bi-${icon}-${isActive ? 'down' : 'up'}`}></i>
             : null}
         </label>
     </>
-));
+    )
+});
 
 export const Select = React.forwardRef(({ onChange, options, name, label }, ref) => (
     <>

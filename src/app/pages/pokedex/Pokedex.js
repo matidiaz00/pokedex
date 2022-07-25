@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import { PokeColors } from './Colors';
 import Item from './../../shared/components/item/Item';
 import Filters from './../../shared/components/filters/Filters';
 import Details from './../../shared/components/details/Details';
+import * as API from './../../shared/providers/Api';
+import { pokeFilter } from './Filters';
 
 function Pokedex() {
 
@@ -11,48 +13,32 @@ function Pokedex() {
   const [isFixed, setIsFixed] = useState(false);
   const [selectPoke, setSelectPoke] = useState(null);
   const [poke, setPoke] = useState([]);
-  const [filters, setFilter] = useState({
-    name:null,
-    alphabet:0,
-    number:1,
-    type: [],
-    ability: [],
-    move: []
-  });
-  
-  const API_URL = 'https://pokeapi.co/api/v2';
+  const [filters, setFilters] = useState({ name: '', alphabet: true, number: false, type: '', ability: '', move: '' });
+  const [filtersData, setFiltersData] = useState({ name: [], type: [], ability: [], move: [] });
 
-  const getSpecificPokemon = async (url) => {
-    const arrPokes = [];
-    const response_1 = await fetch(url);
-    const allpokemon = await response_1.json();
-    arrPokes.push(allpokemon);
-    return setPoke((oldPokes) => [...oldPokes, ...arrPokes]);
-  }
-
-  const getPokemons = async () => {
-    const response = await fetch(`${API_URL}/pokemon/?limit=10&offset=${offset}`);
-    const data = await response.json();
-    for (let i = 0; i < data.results.length; i++) {
-      getSpecificPokemon(data.results[i].url);
-    }
+  const getPokemons = (pokeFilters) => {
+    API.getAllPokemons(offset)
+      .then((pokemons) => {
+        setPoke((oldPokes) => {
+          let pokes = [];
+          pokes = [...oldPokes, ...pokemons];
+          pokes = pokeFilter(pokes, pokeFilters);
+          return pokes
+        });
+      });
     offset += 10;
   };
 
-  const setFilters = () => {
-    const typeREQ = axios.get(`${API_URL}/type`);
-    const abilityREQ = axios.get(`${API_URL}/ability`);
-    const moveREQ = axios.get(`${API_URL}/move`);
-
-    axios.all([typeREQ, abilityREQ, moveREQ])
-      .then(axios.spread((...responses) => {
-        setFilter({ 
-          ...filters,
-          type: responses[0].data.results,
-          ability: responses[1].data.results,
-          move: responses[2].data.results
+  const setPokeFilters = () => {
+    API.getPokeData()
+      .then((data) => {
+        setFiltersData({
+          name: data[0],
+          type: data[1],
+          ability: data[2],
+          move: data[3]
         })
-      }));
+      });
   }
 
   const handleScroll = (e) => {
@@ -61,26 +47,32 @@ function Pokedex() {
     const scrollHeight = e.target.documentElement.scrollHeight;
     const headerHeight = document.getElementById('Header').clientHeight;
     const filtersHeight = document.getElementById('Filters').clientHeight;
-    if (windowHeight + scrollTop + 1 >= scrollHeight) getPokemons();
+    if (windowHeight + scrollTop + 1 >= scrollHeight) getPokemons(filters);
     if (scrollTop + 1 >= headerHeight + filtersHeight) setIsFixed(true);
     else setIsFixed(false);
-
   }
 
   useEffect(() => {
-    setFilters();
-    getPokemons();
+    setPokeFilters();
+    getPokemons(filters);
     window.addEventListener("scroll", handleScroll);
-  }, []);
+  }, [filters, offset]);
 
   const getDetail = (id) => {
-    poke.filter(x => x.id === id).map(x => {
-      setSelectPoke(x)
-    })
+    poke.filter(x => x.id === id).map(x => setSelectPoke(x))
   }
 
   const callback = useCallback((data) => {
-    console.log(data)
+    offset = 0;
+    setFilters({
+      name: data.name,
+      alphabet: data.alphabet,
+      number: data.number,
+      type: data.type,
+      ability: data.ability,
+      move: data.move
+    })
+    getPokemons(filters);
   }, []);
 
   return (
@@ -94,7 +86,7 @@ function Pokedex() {
               style={{zIndex: 1}}
             >
               <Filters
-                options={filters}
+                options={filtersData}
                 submit={callback}
               />
             </div>
@@ -105,7 +97,7 @@ function Pokedex() {
                     id={data.id} key={i}
                     onClick={() => getDetail(data.id)}
                   >
-                    <Item data={data} key={i} />
+                    <Item data={data} key={i} pokeColors={PokeColors}  />
                   </div>
                 ))}
             </div>
@@ -115,7 +107,11 @@ function Pokedex() {
               className={ isFixed ? 'bg-white position-sticky top-0 pt-2' : '' }
               style={{zIndex: 1}}
             >
-              { selectPoke ? <Details data={selectPoke} /> : 'Select a pokemon' }
+              { selectPoke ? 
+                <Details
+                  data={selectPoke}
+                  color={PokeColors[selectPoke.types[0].type.name]}
+                /> : 'Select a pokemon' }
             </div>
           </div>
         </div>
