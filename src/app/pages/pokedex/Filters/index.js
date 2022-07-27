@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { CheckBox, Input, Select } from './Inputs';
+import { getPokeProviders } from '../../../shared/providers/Api';
 
-function Filters({options, submit}) {
+function Filters({submit}) {
 
   const [isActive, setIsActive] = useState(false);
-  const { register, handleSubmit } = useForm({
-    mode: "onBlur" // "onChange"
-  });
+  const [pokeProviders, setPokeProviders] = useState({ name: [], type: [], ability: [], move: [] });
+  const { register, handleSubmit } = useForm({ mode: "onBlur" });
 
   const onSubmit = (data) => {
     submit(data)
@@ -18,9 +18,20 @@ function Filters({options, submit}) {
     setIsActive(current => !current);
   };
 
+  useEffect(() => {
+    getPokeProviders()
+      .then((data) => {
+        setPokeProviders({
+          name: data[0],
+          type: data[1],
+          ability: data[2],
+          move: data[3]
+        })
+      });
+  }, []);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="Filters">
+    <form onSubmit={handleSubmit(onSubmit)} id="Filters" className="Filters">
 
       <div className='d-flex w-100'>
         <Input label="Search for pokemon name" icon="search" {...register("name", {onChange: handleSubmit(onSubmit)})} />
@@ -37,13 +48,13 @@ function Filters({options, submit}) {
           <CheckBox icon="sort-numeric" {...register("number", {onChange: handleSubmit(onSubmit)})} />
         </div>
         <div className='flex-fill pe-4'>
-          <Select label="Type" options={options.type} {...register("type", {onChange: handleSubmit(onSubmit)})} />
+          <Select label="Type" options={pokeProviders.type} {...register("type", {onChange: handleSubmit(onSubmit)})} />
         </div>
         <div className='flex-fill pe-4'>
-          <Select label="Ability" options={options.ability} {...register("ability", {onChange: handleSubmit(onSubmit)})} />
+          <Select label="Ability" options={pokeProviders.ability} {...register("ability", {onChange: handleSubmit(onSubmit)})} />
         </div>
         <div className='flex-fill'>
-          <Select label="Move" options={options.move} {...register("move", {onChange: handleSubmit(onSubmit)})} />
+          <Select label="Move" options={pokeProviders.move} {...register("move", {onChange: handleSubmit(onSubmit)})} />
         </div>
       </div>
     </form>

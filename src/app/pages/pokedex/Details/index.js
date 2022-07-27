@@ -5,7 +5,7 @@ function Details({data, color}) {
   return (
     <div className="Details">
       <div className="card w-100">
-        <img src={data.sprites.other.home.front_default} className="mx-auto w-50" alt={'hola mundo'} />
+        <img loading="lazy" src={data.sprites.other.home.front_default} className="mx-auto w-50" alt={'hola mundo'} />
         <div className="card-body" style={{backgroundColor: color}}>
           <nav>
             <div className="nav nav-tabs" id="nav-tab" role="tablist">
