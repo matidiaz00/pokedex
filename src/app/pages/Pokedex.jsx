@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { pokeColors } from '../../shared/providers/Api';
 import PokedexContextProvider from '../../PokedexContext';
-import Item from './Item';
-import Filters from './Filters';
-import Details from './Details';
+import Item from './components/pokedex/Item';
+import Filters from './components/pokedex/Filters';
+import Details from './components/pokedex/Details';
 
 /*
 const removeDuplicates = (arr) => {
