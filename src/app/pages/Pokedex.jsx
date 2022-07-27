@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { pokeColors } from '../shared/providers/Api';
-import PokedexContextProvider from '../PokedexContext';
+import { PokeContext } from '../PokedexContext';
 import Item from './components/pokedex/Item';
 import Filters from './components/pokedex/Filters';
 import Details from './components/pokedex/Details';
@@ -28,7 +28,7 @@ const pokeFilter = (pokes, filters) => {
 
 function Pokedex() {
 
-  const pokeContext = useContext(PokedexContextProvider);
+  const pokeContext = useContext(PokeContext);
 
   const [isFixed, setIsFixed] = useState(false);
   const [selectPoke, setSelectPoke] = useState(null);
@@ -50,7 +50,7 @@ function Pokedex() {
   }, []);
 
   const getDetail = (id) => {
-    pokeContext.filter(x => x.id === id).map(x => setSelectPoke(x))
+    pokeContext.pokes.filter(x => x.id === id).map(x => setSelectPoke(x))
   }
 
   const callback = useCallback((data) => {

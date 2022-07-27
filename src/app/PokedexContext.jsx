@@ -8,16 +8,18 @@ export function PokedexContextProvider ({children}) {
   const [pokes, setPokes] = useState([]);
 
   useEffect(() => {
-    getAllPokes()
-      .then((pokes) => {
-        setLoad(false)
-        setPokes(pokes)
-      });
-  }, []);
+    (async () => {
+      await getAllPokes()
+        .then((pokes) => {
+          setLoad(false)
+          setPokes(pokes)
+        });
+    })()
+  }, [load]);
 
   return <Context.Provider value={{pokes, load}}>
     {children}
   </Context.Provider>
 }
 
-export default Context
+export const PokeContext = Context;
