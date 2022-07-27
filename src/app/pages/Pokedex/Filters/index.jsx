@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { CheckBox, Input, Select } from './Inputs';
+import { CheckBox, Input, Select } from '../../../shared/components/Inputs/Inputs';
 import { getPokeProviders } from '../../../shared/providers/Api';
 
 function Filters({submit}) {
