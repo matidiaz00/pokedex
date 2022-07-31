@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 export const Input = React.forwardRef(({ onChange, name, label, icon }, ref) => (
     <>
@@ -19,13 +19,17 @@ export const Input = React.forwardRef(({ onChange, name, label, icon }, ref) => 
     </>
 ));
 
-export const CheckBox = React.forwardRef(({ onChange, name, icon }, ref) => {
+export const CheckBox = React.forwardRef(({ onChange, name, icon, defaultData}, ref) => {
 
     const [isActive, setIsActive] = useState(false);
 
-    const handleClick = (e) => {
-        setIsActive(current => !current);
+    const checked = (e) => {
+        setIsActive(e.target.checked)
     };
+
+    useEffect(() => {
+        if (defaultData != null) setIsActive(defaultData)
+    }, []);
 
     return (
     <>
@@ -34,11 +38,15 @@ export const CheckBox = React.forwardRef(({ onChange, name, icon }, ref) => {
             className="btn-check"
             name={name}
             id={name}
-            ref={ref} onChange={onChange}
+            ref={ref}
+            onChange={(e) => {
+                onChange(e)
+                checked(e)
+            }}
         />
-        <label className="btn btn-secondary" htmlFor={name} onClick={handleClick}>
+        <label className={`btn btn-${isActive?'primary':'secondary'}`} htmlFor={name}>
             {icon ?
-                <i className={`bi bi-${icon}-${isActive ? 'down' : 'up'}`}></i>
+                <i className={`bi bi-${icon}-down`}></i>
             : null}
         </label>
     </>

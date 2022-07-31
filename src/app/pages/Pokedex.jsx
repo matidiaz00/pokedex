@@ -1,38 +1,72 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { pokeColors } from '../shared/providers/Api';
 import { PokeContext } from '../PokedexContext';
 import Item from './components/pokedex/Item';
 import Filters from './components/pokedex/Filters';
 import Details from './components/pokedex/Details';
-
-/*
-const removeDuplicates = (arr) => {
-  return arr.reduce((acc, current) => {
-      const x = acc.find(item => item.id === current.id);
-      return !x ? acc.concat([current]) : acc;
-  }, []);
-}
-
-const pokeFilter = (pokes, filters) => {
-  pokes = pokes.filter((pokemon, index) => {
-      let bool = true;
-      if (filters.name !== '' && !pokemon.name.includes(filters.name)) bool = false;
-      if (filters.ability !== '' && filters.ability !== 'Ability' && !pokemon.abilities.some(e => e.ability.name === filters.ability)) bool = false;
-      if (filters.move !== '' && filters.move !== 'Move' && !pokemon.moves.some(e => e.move.name === filters.move)) bool = false;
-      if (filters.type !== '' && filters.type !== 'Type' && !pokemon.types.some(e => e.type.name === filters.type)) bool = false;
-      return bool
-  });
-  return removeDuplicates(pokes);
-}
-*/
+import EmptySelectPoke from './components/pokedex/EmptySelectPoke';
+import Empty from './components/pokedex/Empty';
 
 function Pokedex() {
+
+  const howManyAdd = 10;
 
   const pokeContext = useContext(PokeContext);
 
   const [isFixed, setIsFixed] = useState(false);
+  const [pokes, setPokes] = useState([]);
   const [selectPoke, setSelectPoke] = useState(null);
-  const [pokeFilters, setPokeFilters] = useState(null);
+  const [offset, setOffset] = useState(0);
+  const [isScroll, setIsScroll] = useState(false);
+  const [pokeFilters, setPokeFilters] = useState({
+    name: '',
+    order: 'Sort',
+    type: 'Type',
+    ability: 'Ability',
+    move: 'Move'
+  });
+
+  const setFilter = (filter, type, typePlural, pokemon) => {
+    const low = type.toLowerCase();
+    if (
+      filter !== '' &&
+      filter !== type &&
+      !pokemon[typePlural].some(e => e[low].name === filter)
+    ) return true;
+    else return false
+  }
+
+  const pokeFilter = async (pokemones) => {
+    return pokemones.filter((pokemon, index) => {
+      let bool = true;
+      if (pokeFilters.name !== '' && !pokemon.name.includes(pokeFilters.name)) bool = false;
+      if (pokeFilters.ability !== '' && setFilter(pokeFilters.ability, 'Ability', 'abilities', pokemon)) bool = false;
+      if (pokeFilters.move !== '' && setFilter(pokeFilters.move, 'Move', 'moves', pokemon)) bool = false;
+      if (pokeFilters.type !== '' && setFilter(pokeFilters.type, 'Type', 'types', pokemon)) bool = false;
+      return bool
+    })
+  }
+
+  const pokeSort = async (pokemones) => {
+    return pokemones.sort((x, y) => {
+      if (pokeFilters.order === 'alphabet') {
+        const a = x.name.toUpperCase(),
+        b = y.name.toUpperCase();
+        return a === b ? 0 : a > b ? 1 : -1;
+      } else if (pokeFilters.order === 'numeric') {
+        return x.id > y.id ? 1 : -1;
+      } else {
+        return x.id > y.id ? 1 : -1;
+      }
+    });
+  }
+
+  const pokeOffset = async (allPokes) => {
+    return allPokes
+      .filter((pokemon, index) => 
+        index >= offset && index < offset + howManyAdd
+      )
+  }
 
   const handleScroll = (e) => {
     const windowHeight = window.innerHeight;
@@ -40,35 +74,57 @@ function Pokedex() {
     const scrollHeight = e.target.documentElement.scrollHeight;
     const headerHeight = document.getElementById('Header').clientHeight;
     const filtersHeight = document.getElementById('Filters').clientHeight;
-    if (windowHeight + scrollTop + 1 >= scrollHeight) //getPokemons(filters);
+    if (windowHeight + scrollTop + 1 >= scrollHeight || isScroll) setIsScroll(true);
     if (scrollTop + 1 >= headerHeight + filtersHeight) setIsFixed(true);
     else setIsFixed(false);
   }
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-  }, []);
+  const setAllPokes = async () => {
+    let pokemons = pokeContext.pokes;
+    pokemons = await pokeSort(pokemons);
+    pokemons = await pokeFilter(pokemons);
+    pokemons = await pokeOffset(pokemons);
+    setPokes((oldPokes) => [...oldPokes, ...pokemons]);
+    setOffset(offset + howManyAdd);
+  }
+
+  const getMorePokes = () => {
+		setAllPokes();
+		setIsScroll(false);
+	};
 
   const getDetail = (id) => {
     pokeContext.pokes.filter(x => x.id === id).map(x => setSelectPoke(x))
   }
 
-  const callback = useCallback((data) => {
+  const callback = (data) => {
+    setOffset(() => 0);
+    setPokes(() => []);
     setPokeFilters({
       name: data.name,
-      alphabet: data.alphabet,
-      number: data.number,
+      order: data.order,
       type: data.type,
       ability: data.ability,
       move: data.move
     })
-    //getAllPokemons(pokeFilters);
+  };
+
+  useEffect(() => {
+		if (!isScroll) return;
+		getMorePokes();
+	}, [isScroll]);
+
+  useEffect(() => {
+    setAllPokes();
+  }, [pokeFilters]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <div className="Pokedex">
       <div className='container'>
-        <div className='d-none'>{pokeFilters}</div>
         <div className='row'>
           <div className='col-12 col-lg-8 position-relative'>
             <div
@@ -76,19 +132,20 @@ function Pokedex() {
               className={`w-100 py-2 ${isFixed ? 'bg-white position-sticky top-0' : ''}`}
               style={{zIndex: 1}}
             >
-              <Filters submit={callback} />
+              <Filters defaultData={pokeFilters} change={callback} />
             </div>
               <div className='row m-n3'>
                 {
-                  pokeContext.pokes.map((data, i) => (
-                    <div 
-                      className='col-6 col-md-4 py-3'
-                      id={data.id} key={data.id}
-                      onClick={() => getDetail(data.id)}
-                    >
-                      <Item data={data} key={data.id} pokeColors={pokeColors}  />
-                    </div>
-                  ))
+                  pokes.length === 0 ? <Empty/>
+                  : pokes.map((data, i) => (
+                      <div 
+                        className='col-6 col-md-4 py-3'
+                        id={data.id} key={i}
+                        onClick={() => getDetail(data.id)}
+                      >
+                        <Item data={data} key={i} pokeColors={pokeColors}  />
+                      </div>
+                    ))
                 }
             </div>
           </div>
@@ -101,7 +158,7 @@ function Pokedex() {
                 <Details
                   data={selectPoke}
                   color={pokeColors[selectPoke.types[0].type.name]}
-                /> : 'Select a pokemon' }
+                /> : <EmptySelectPoke/> }
             </div>
           </div>
         </div>

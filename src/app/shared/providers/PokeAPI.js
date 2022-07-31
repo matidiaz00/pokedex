@@ -23,19 +23,15 @@ const setPromisePokes = async (data) => {
 
 const setSearches = (data, length) => {
   return {
-    firstSearch: data.filter((item, i) => i <= 500),
-    secondSearch: data.filter((item, i) => i > 500 && i <= 1000),
-    thirdSearch: data.filter((item, i) => i > 1000 && i < length)
+    firstSearch: data.filter((item, i) => i <= 200),
+    secondSearch: data.filter((item, i) => i > 200 && i <= 400),
+    thirdSearch: data.filter((item, i) => i > 400 && i < 800),
+    fourthSearch: data.filter((item, i) => i > 800 && i < 1200),
+    fifthSearch: data.filter((item, i) => i > 1200 && i < length)
   }
 }
 
-export const getPokeFilter = async (filter) => {
-	const res = await fetch(`${POKE_API_URL}/${filter}`);
-	const pokeFilter = await res.json();
-	return pokeFilter.results;
-}
-
-export const getPromiseAllPokes = async () => {
+export const setPromiseAllPokes = async () => {
   let results = null;
   await getPokesBasicData()
     .then(async (basicData) => {
@@ -43,8 +39,16 @@ export const getPromiseAllPokes = async () => {
       results = await Promise.all([
         await setPromisePokes(searches.firstSearch),
         await setPromisePokes(searches.secondSearch),
-        await setPromisePokes(searches.thirdSearch)
+        await setPromisePokes(searches.thirdSearch),
+        await setPromisePokes(searches.fourthSearch),
+        await setPromisePokes(searches.fifthSearch)
       ])
     })
   return results;
+}
+
+export const getPokeFilter = async (filter) => {
+	const res = await fetch(`${POKE_API_URL}/${filter}`);
+	const pokeFilter = await res.json();
+	return pokeFilter.results;
 }

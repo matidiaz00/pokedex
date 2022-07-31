@@ -5,14 +5,24 @@ import ReactLogo from './logo.svg';
 function Header() {
 
   return (
-    <div id="Header" className="d-none d-lg-block">
-      <div className="container">
+    <div id="Header" className="">
+      <div className="container d-none d-lg-block">
         <nav className="nav py-3 nav-pills justify-content-between align-items-center">
           <Link to="/pokedex" className="nav-link">Pokedex</Link>
           <Link to="/battles" className="nav-link">Battles</Link>
           <img src={ReactLogo} width="200" className='mx-3' alt="React Logo" />
           <Link to="/friends" className="nav-link">Friends</Link>
           <Link to="/" className="nav-link">My Account</Link>
+        </nav>
+      </div>
+      <div className="container d-lg-none">
+        <nav className='d-flex justify-content-between align-items-center py-3'>
+          <a onClick={() => null} className="">
+            <i className="bi bi-arrow-left h3 m-0"></i>
+          </a>
+          <a onClick={() => null} className="">
+            <i className="bi bi-heart h3 m-0"></i>
+          </a>
         </nav>
       </div>
     </div>

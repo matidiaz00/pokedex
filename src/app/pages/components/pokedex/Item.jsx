@@ -1,14 +1,21 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 function Item({data, pokeColors}) {
+
+  let navigate = useNavigate();
 
   const setPokeColor = () => {
     return pokeColors[data.types[0].type.name]
   }
 
+  const clickMobile = () => {
+    navigate(`/pokedex/${data.id}`);
+  }
+
   return (
     <div className="Item">
-      <div className='card'>
+      <div className='card position-relative'>
         <div className="card-body" style={{backgroundColor: setPokeColor()}}>
           <img loading="lazy" src={data.sprites.other.home.front_default} className="mw-100" width="91" height="91" alt='pokemon' />
           <h5 className='card-title text-capitalize'>{data.name}</h5>
@@ -21,7 +28,8 @@ function Item({data, pokeColors}) {
               >{data.type.name}</span>
             ))}
           </div>
-          <a href="https://www.google.com" className="card-link">Ver más</a>
+          <a onClick={() => null} className="d-none d-lg-block card-link stretched-link">Ver más</a>
+          <a onClick={() => clickMobile()} className="d-lg-none card-link stretched-link">Ver más</a>
         </div>
       </div>
     </div>
