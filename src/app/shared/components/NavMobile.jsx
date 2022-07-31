@@ -1,15 +1,30 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
+import CustomLink from './CustomLink';
 
 function NavMobile() {
 
+  const location = useLocation();
+  const path = location.pathname.split("/");
+
+  const [isChildrenPage, setIsChildrenPage] = useState(false);
+
+  useEffect(() => {
+    setIsChildrenPage(path[2] ? true : false)
+  }, [location]);
+
   return (
-    <div className="NavMobile w-100 d-lg-none position-fixed bottom-0">
+    <div
+      className={
+        `NavMobile w-100 position-fixed bottom-0 ${isChildrenPage ? 'd-none' : 'd-lg-none'}` 
+      }
+      style={{zIndex: 1}}
+      >
         <nav className="nav nav-pills nav-fill bg-white border-top">
-          <Link to="/pokedex" className="nav-link">Pokedex</Link>
-          <Link to="/battles" className="nav-link">Battles</Link>
-          <Link to="/friends" className="nav-link">Friends</Link>
-          <Link to="/" className="nav-link">My Account</Link>
+          <CustomLink to="/pokedex" styles="nav-link" active="active">Pokedex</CustomLink>
+          <CustomLink to="/battles" styles="nav-link" active="active">Battles</CustomLink>
+          <CustomLink to="/friends" styles="nav-link" active="active">Friends</CustomLink>
+          <CustomLink to="/accounts" styles="nav-link" active="active">My Account</CustomLink>
         </nav>
     </div>
   );

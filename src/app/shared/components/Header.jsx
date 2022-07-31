@@ -1,29 +1,34 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from "react-router-dom";
 import ReactLogo from './logo.svg';
+import CustomLink from './CustomLink';
 
 function Header() {
+
+  const location = useLocation();
+  const path = location.pathname.split("/");
+
+  const [isChildrenPage, setIsChildrenPage] = useState(false);
+  const [title, setTitle] = useState('');
+
+  useEffect(() => {
+    setIsChildrenPage(path[2] ? true : false)
+    setTitle(path[1] ? path[1] : 'Pokedex')
+  }, [location]);
 
   return (
     <div id="Header" className="">
       <div className="container d-none d-lg-block">
         <nav className="nav py-3 nav-pills justify-content-between align-items-center">
-          <Link to="/pokedex" className="nav-link">Pokedex</Link>
-          <Link to="/battles" className="nav-link">Battles</Link>
+          <CustomLink to="/pokedex" styles="nav-link" active="active">Pokedex</CustomLink>
+          <CustomLink to="/battles" styles="nav-link" active="active">Battles</CustomLink>
           <img src={ReactLogo} width="200" className='mx-3' alt="React Logo" />
-          <Link to="/friends" className="nav-link">Friends</Link>
-          <Link to="/" className="nav-link">My Account</Link>
+          <CustomLink to="/friends" styles="nav-link" active="active">Friends</CustomLink>
+          <CustomLink to="/accounts" styles="nav-link" active="active">My Account</CustomLink>
         </nav>
       </div>
-      <div className="container d-lg-none">
-        <nav className='d-flex justify-content-between align-items-center py-3'>
-          <a onClick={() => null} className="">
-            <i className="bi bi-arrow-left h3 m-0"></i>
-          </a>
-          <a onClick={() => null} className="">
-            <i className="bi bi-heart h3 m-0"></i>
-          </a>
-        </nav>
+      <div className={`container ${isChildrenPage ? 'd-none' : 'd-lg-none'}`}>
+        <h3 className='pt-3 text-capitalize'>{ title }</h3>
       </div>
     </div>
   );

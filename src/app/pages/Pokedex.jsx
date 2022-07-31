@@ -130,7 +130,7 @@ function Pokedex() {
             <div
               id="Filters"
               className={`w-100 py-2 ${isFixed ? 'bg-white position-sticky top-0' : ''}`}
-              style={{zIndex: 1}}
+              style={{zIndex: 2}}
             >
               <Filters defaultData={pokeFilters} change={callback} />
             </div>
