@@ -151,7 +151,7 @@ function Pokedex() {
           </div>
           <div className='col-4 d-none d-lg-block'>
             <div
-              className={ isFixed ? 'bg-white position-sticky top-0 pt-2' : '' }
+              className={`bg-white ${ isFixed ? 'position-sticky top-0 pt-4' : ''}`}
               style={{zIndex: 1}}
             >
               { selectPoke ? 

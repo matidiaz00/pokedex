@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { Input, Select } from '../../../shared/components/Inputs';
+import { InputSearch, Select } from '../../../shared/components/Inputs';
 import { getPokeProviders } from '../../../shared/providers/Api';
 
 function Filters({defaultData, change}) {
@@ -42,7 +42,7 @@ function Filters({defaultData, change}) {
   return (
     <form onSubmit={handleSubmit(onChange)} id="Filters" className="Filters">
       <div className='d-flex w-100'>
-        <Input label="Search for pokemon name" icon="search" {...register("name", {onChange: handleSubmit(onChange)})} />
+        <InputSearch label="Search for pokemon name" icon="search" {...register("name", {onChange: handleSubmit(onChange)})} />
         <button type="button" onClick={handleClick} className="btn btn-light ms-3">
           <i className={`bi bi-${isActive ? 'x' : 'filter'}`}></i>
         </button>

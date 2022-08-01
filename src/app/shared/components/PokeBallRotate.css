@@ -1,0 +1,13 @@
+@keyframes rotating {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+}
+
+.rotating {
+    fill: --bs-light;
+    animation: rotating 10s linear infinite;
+}

@@ -1,4 +1,14 @@
     /* POKEBALL ANIMATIONS */
+    svg.failure {
+      animation: opa 1s;
+      animation-delay: 1s;
+    }
+    @keyframes opa {
+      to {
+        opacity: 0;
+        transform: scale(3);
+      }
+    }
   /* shake to rotate g.gravity */
   svg.fetching g.gravity {
     /* ! infinite given the unknown time it takes for the request to be resolved/rejected */

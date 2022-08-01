@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from "react-router-dom";
-import ReactLogo from './logo.svg';
+import { useLocation } from "react-router-dom";
+import ReactLogo from '../../assets/logo.svg';
 import CustomLink from './CustomLink';
 
 function Header() {

@@ -23,7 +23,7 @@ function PokeDetail() {
 
   return (
     <div className="PokeDetail">
-      <div className="container d-lg-none">
+      <div className="container">
         <nav className='d-flex justify-content-between align-items-center py-3'>
           <Link to="/">
             <i className="bi bi-arrow-left h3 m-0"></i>
@@ -32,8 +32,8 @@ function PokeDetail() {
             <i className="bi bi-heart h3 m-0"></i>
           </a>
         </nav>
+        { poke && poke != null ? <Details data={poke} color={pokeColor} /> : null }
       </div>
-      { poke && poke != null ? <Details data={poke} color={pokeColor} /> : null }
     </div>
   );
 }

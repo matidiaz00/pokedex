@@ -19,6 +19,23 @@ export const Input = React.forwardRef(({ onChange, name, label, icon }, ref) => 
     </>
 ));
 
+export const InputSearch = React.forwardRef(({ onChange, name, label, icon }, ref) => (
+    <>
+        <div className="input-group flex-grow-1">
+            <span className="input-group-text bg-transparent">
+                <i className="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                name={name}
+                placeholder={label}
+                className="form-control"
+                ref={ref} onChange={onChange}
+            />
+        </div>
+    </>
+));
+
 export const CheckBox = React.forwardRef(({ onChange, name, icon, defaultData}, ref) => {
 
     const [isActive, setIsActive] = useState(false);
