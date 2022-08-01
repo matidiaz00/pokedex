@@ -3,8 +3,6 @@ import PokeBallRotate from '../../../shared/components/PokeBallRotate';
 
 function Details({data, color}) {
 
-  console.log(data)
-
   return (
     <div className="Details">
       <div className="card w-100">

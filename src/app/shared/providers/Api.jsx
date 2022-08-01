@@ -2,7 +2,7 @@ import { setPromiseAllPokes, getPokeFilter } from './PokeAPI';
 import { PokeColors } from './PokeColors';
 
 const POKE_API_URL = 'https://pokeapi.co/api/v2';
-const TRAINERS_API_URL = './trainers.json';
+const TRAINERS_API_URL = '/trainers.json';
 
 export const getAllPokes = async () => {
     let pokes = []
@@ -54,7 +54,12 @@ export const getPokeProviders = async () => {
 }
 
 export const getAllTrainers = async () => {
-    const res = await fetch(`${TRAINERS_API_URL}`);
+    const res = await fetch(`${TRAINERS_API_URL}`, {
+        headers : { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+    });
     const trainers = await res.json();
     return trainers
 }

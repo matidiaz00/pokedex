@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useReducer, useEffect} from 'react';
 
 export const Input = React.forwardRef(({ onChange, name, label, icon }, ref) => (
     <>
@@ -38,14 +38,14 @@ export const InputSearch = React.forwardRef(({ onChange, name, label, icon }, re
 
 export const CheckBox = React.forwardRef(({ onChange, name, icon, defaultData}, ref) => {
 
-    const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useReducer(false);
 
     const checked = (e) => {
         setIsActive(e.target.checked)
     };
 
     useEffect(() => {
-        if (defaultData != null) setIsActive(defaultData)
+        if (defaultData && defaultData != null) setIsActive(defaultData)
     }, []);
 
     return (

@@ -38,8 +38,8 @@ function Item({data, pokeColors}) {
               alt='pokemon'
             />
           </div>
-          <a onClick={() => null} className="d-none d-lg-block card-link text-white stretched-link">Ver más</a>
-          <a onClick={() => clickMobile()} className="d-block d-lg-none card-link text-white stretched-link">Ver más</a>
+          <button type='button' onClick={() => null} className="d-none d-lg-block px-1 py-0 btn-link btn card-link text-white stretched-link">Ver más</button>
+          <button type='button' onClick={() => clickMobile()} className="d-block px-1 py-0 btn-link d-lg-none btn card-link text-white stretched-link">Ver más</button>
         </div>
       </div>
     </div>

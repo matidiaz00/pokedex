@@ -20,7 +20,7 @@ function App() {
   const [load, setLoad] = useState(pokeContext.load);
 
   useEffect(() => {
-    if (pokeContext.load == false) {
+    if (pokeContext.load === false) {
       setTimeout(() => {
         setLoad(pokeContext.load)
       }, 1000)

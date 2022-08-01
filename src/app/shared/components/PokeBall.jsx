@@ -9,7 +9,7 @@ function PokeBall() {
   const [load, setLoad] = useState(pokeContext.load);
 
   useEffect(() => {
-    setLoad(pokeContext.load == false)
+    setLoad(pokeContext.load === false)
   }, [pokeContext.load]);
 
   return (

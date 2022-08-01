@@ -28,9 +28,9 @@ function PokeDetail() {
           <Link to="/">
             <i className="bi bi-arrow-left h3 m-0"></i>
           </Link>
-          <a onClick={() => null} className="">
+          <button type='button' onClick={() => null} className="btn btn-link">
             <i className="bi bi-heart h3 m-0"></i>
-          </a>
+          </button>
         </nav>
         { poke && poke != null ? <Details data={poke} color={pokeColor} /> : null }
       </div>

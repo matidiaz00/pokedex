@@ -72,8 +72,8 @@ function Pokedex() {
     const windowHeight = window.innerHeight;
     const scrollTop = e.target.documentElement.scrollTop;
     const scrollHeight = e.target.documentElement.scrollHeight;
-    const headerHeight = document.getElementById('Header').clientHeight;
-    const filtersHeight = document.getElementById('Filters').clientHeight;
+    const headerHeight = document && document.getElementById('Header') && document.getElementById('Header').clientHeight ? document.getElementById('Header').clientHeight : null;
+    const filtersHeight = document && document.getElementById('Filters') && document.getElementById('Filters').clientHeight ? document.getElementById('Filters').clientHeight : null;
     if (windowHeight + scrollTop + 1 >= scrollHeight || isScroll) setIsScroll(true);
     if (scrollTop + 1 >= headerHeight + filtersHeight) setIsFixed(true);
     else setIsFixed(false);

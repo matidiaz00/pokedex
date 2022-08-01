@@ -4,7 +4,9 @@ function SSO() {
 
   return (
     <div className="SSO">
+      <div className="container">
         SSO
+      </div>
     </div>
   );
 }

@@ -4,7 +4,9 @@ function Battles() {
 
   return (
     <div className="Battles">
+      <div className="container">
         Battles
+      </div>
     </div>
   );
 }

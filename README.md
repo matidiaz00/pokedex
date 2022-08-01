@@ -1,70 +1,45 @@
-# Getting Started with Create React App
+# Pokedex Web APP con ReactJS
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Web APP recreando una Pokedex utilizando ReactJS y la API publica PokeAPI.
 
-## Available Scripts
+La idea del proyecto es que tenga una conección con algun juego actual de la Nintendo Switch, donde el usuario pueda loguearse con su cuenta, ver sus amigos, ver las batallas, sus pokemones, etc.
 
-In the project directory, you can run:
+AVISO IMPORTANTE: Todavia esta en construcción! Por el momento solo esta echa la pagina principal para buscar información de los pokemones, y es solo la maqueta con bootstrap (falta el diseño).
 
-### `npm start`
+## Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+El proyecto tiene un pipeline programado para que se suba automaticamente al servidor al hacer un git push estando en la rama madre
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+El servidor que se utilizo en este caso es Firebase Hosting
 
-### `npm test`
+La URL de producción es [production](https://pokedex-matidiaz.web.app)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Pasos para correr el proyecto en local
 
-### `npm run build`
+Para correr el proyecto es cuestion de seguir los siguientes pasos
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Tener instalado GIT y tambien la version 16 de NodeJS (no fue probada con otra version)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+En la consola pararse en la carpeta que quiera descargar el proyecto y correr el siguiente comando
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`git clone https://github.com/matidiaz00/pokedex.git`
 
-### `npm run eject`
+Ingresar a la carpeta mediante la consola y correr el siguiente comando
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+`npm i`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Por ultimo cuando termine de instalarse las dependencias correr el siguiente comando
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+`npm run start`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Se abrira automaticamente la visualización del proyecto en su navegador web con la URL [deployment](http://localhost:3000/)
 
-## Learn More
+### IMPORTANTE, problemas que fueron resueltos
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+La API publica de PokeAPI no tiene filtros en sus endpoints, solamente se puede filtrar por nombre.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Necesitaba un filtro mas complejo asi que para solucionar esto sin tener que armar una API propia en NodeJS fue resuelto mediante el frontend.
 
-### Code Splitting
+Se hace una llamada principal que trae todos los ids y se almacena en un array, luego con este dato se hace una cadena de llamadas a la API para traer la información de cada pokemon, ya que son mas de 1000 esta cadena de llamadas se dividen en mas de 4 cadenas, una vez termina se guarda en el context de la aplicación para que se pueda acceder a ella desde cualquier componente.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+El unico problema que causa esto es que tarde en inicializar la aplicación, esto lo solucione con un cargando personalizado donde aparece una animación con una pokebola.
