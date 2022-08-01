@@ -6,12 +6,13 @@ import Filters from './components/pokedex/Filters';
 import Details from './components/pokedex/Details';
 import EmptySelectPoke from './components/pokedex/EmptySelectPoke';
 import Empty from './components/pokedex/Empty';
+import { setAllPokes, getClientHeight } from '../shared/providers/PokeFilter';
 
 function Pokedex() {
 
-  const howManyAdd = 10;
-
   const pokeContext = useContext(PokeContext);
+
+  const howManyAdd = 10;
 
   const [isFixed, setIsFixed] = useState(false);
   const [pokes, setPokes] = useState([]);
@@ -25,73 +26,6 @@ function Pokedex() {
     ability: 'Ability',
     move: 'Move'
   });
-
-  const setFilter = (filter, type, typePlural, pokemon) => {
-    const low = type.toLowerCase();
-    if (
-      filter !== '' &&
-      filter !== type &&
-      !pokemon[typePlural].some(e => e[low].name === filter)
-    ) return true;
-    else return false
-  }
-
-  const pokeFilter = async (pokemones) => {
-    return pokemones.filter((pokemon, index) => {
-      let bool = true;
-      if (pokeFilters.name !== '' && !pokemon.name.includes(pokeFilters.name)) bool = false;
-      if (pokeFilters.ability !== '' && setFilter(pokeFilters.ability, 'Ability', 'abilities', pokemon)) bool = false;
-      if (pokeFilters.move !== '' && setFilter(pokeFilters.move, 'Move', 'moves', pokemon)) bool = false;
-      if (pokeFilters.type !== '' && setFilter(pokeFilters.type, 'Type', 'types', pokemon)) bool = false;
-      return bool
-    })
-  }
-
-  const pokeSort = async (pokemones) => {
-    return pokemones.sort((x, y) => {
-      if (pokeFilters.order === 'alphabet') {
-        const a = x.name.toUpperCase(),
-        b = y.name.toUpperCase();
-        return a === b ? 0 : a > b ? 1 : -1;
-      } else if (pokeFilters.order === 'numeric') {
-        return x.id > y.id ? 1 : -1;
-      } else {
-        return x.id > y.id ? 1 : -1;
-      }
-    });
-  }
-
-  const pokeOffset = async (allPokes) => {
-    return allPokes
-      .filter((pokemon, index) => 
-        index >= offset && index < offset + howManyAdd
-      )
-  }
-
-  const handleScroll = (e) => {
-    const windowHeight = window.innerHeight;
-    const scrollTop = e.target.documentElement.scrollTop;
-    const scrollHeight = e.target.documentElement.scrollHeight;
-    const headerHeight = document && document.getElementById('Header') && document.getElementById('Header').clientHeight ? document.getElementById('Header').clientHeight : null;
-    const filtersHeight = document && document.getElementById('Filters') && document.getElementById('Filters').clientHeight ? document.getElementById('Filters').clientHeight : null;
-    if (windowHeight + scrollTop + 1 >= scrollHeight || isScroll) setIsScroll(true);
-    if (scrollTop + 1 >= headerHeight + filtersHeight) setIsFixed(true);
-    else setIsFixed(false);
-  }
-
-  const setAllPokes = async () => {
-    let pokemons = pokeContext.pokes;
-    pokemons = await pokeSort(pokemons);
-    pokemons = await pokeFilter(pokemons);
-    pokemons = await pokeOffset(pokemons);
-    setPokes((oldPokes) => [...oldPokes, ...pokemons]);
-    setOffset(offset + howManyAdd);
-  }
-
-  const getMorePokes = () => {
-		setAllPokes();
-		setIsScroll(false);
-	};
 
   const getDetail = (id) => {
     pokeContext.pokes.filter(x => x.id === id).map(x => setSelectPoke(x))
@@ -111,16 +45,35 @@ function Pokedex() {
 
   useEffect(() => {
 		if (!isScroll) return;
-		getMorePokes();
+    setAllPokes(pokeContext, pokeFilters, offset, howManyAdd)
+      .then((allPokes) => {
+        setPokes(oldPokes => [...oldPokes, ...allPokes]);
+        setOffset((offset) => offset + howManyAdd);
+        setIsScroll(false);
+      });
+    // eslint-disable-next-line
 	}, [isScroll]);
 
   useEffect(() => {
-    setAllPokes();
+    setAllPokes(pokeContext, pokeFilters, offset, howManyAdd)
+      .then((allPokes) => {
+        setPokes(oldPokes => [...oldPokes, ...allPokes]);
+        setOffset((offset) => offset + howManyAdd);
+      });
+    // eslint-disable-next-line
   }, [pokeFilters]);
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-  }, []);
+  const handleScroll = (e) => {
+    const windowHeight = window.innerHeight;
+    const scrollTop = e.target.documentElement.scrollTop;
+    const scrollHeight = e.target.documentElement.scrollHeight;
+    const headerHeight = getClientHeight('Header');
+    const filtersHeight = getClientHeight('Filters');
+    if (windowHeight + scrollTop + 1 >= scrollHeight || isScroll) setIsScroll(true);
+    if (scrollTop + 1 >= headerHeight + filtersHeight) setIsFixed(true);
+    else setIsFixed(false);
+  }
+  window.addEventListener("scroll", handleScroll);
 
   return (
     <div className="Pokedex">

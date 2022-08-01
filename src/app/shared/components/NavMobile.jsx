@@ -2,15 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import CustomLink from './CustomLink';
 
-function NavMobile() {
-
-  const location = useLocation();
+const getIsChildrenPage = (location) => {
   const path = location.pathname.split("/");
+  return path[2] ? true : false
+}
+
+function NavMobile() {
 
   const [isChildrenPage, setIsChildrenPage] = useState(false);
 
+  const location = useLocation();
+
   useEffect(() => {
-    setIsChildrenPage(path[2] ? true : false)
+    setIsChildrenPage(
+      getIsChildrenPage(location)
+    )
   }, [location]);
 
   return (

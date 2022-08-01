@@ -3,17 +3,31 @@ import { useLocation } from "react-router-dom";
 import ReactLogo from '../../assets/logo.svg';
 import CustomLink from './CustomLink';
 
-function Header() {
-
-  const location = useLocation();
+const getIsChildrenPage = (location) => {
   const path = location.pathname.split("/");
+  return path[2] ? true : false
+}
+
+const getTitle = (location) => {
+  const path = location.pathname.split("/");
+  return path[1] ? path[1] : 'Pokedex'
+}
+
+function Header() {
 
   const [isChildrenPage, setIsChildrenPage] = useState(false);
   const [title, setTitle] = useState('');
 
+  const location = useLocation();
+
   useEffect(() => {
-    setIsChildrenPage(path[2] ? true : false)
-    setTitle(path[1] ? path[1] : 'Pokedex')
+
+    setIsChildrenPage(
+      getIsChildrenPage(location)
+    )
+    setTitle(
+      getTitle(location)
+    )
   }, [location]);
 
   return (
