@@ -73,7 +73,11 @@ function Pokedex() {
     if (scrollTop + 1 >= headerHeight + filtersHeight) setIsFixed(true);
     else setIsFixed(false);
   }
-  window.addEventListener("scroll", handleScroll);
+
+  useEffect(() => {
+		window.addEventListener("scroll", handleScroll);
+    // eslint-disable-next-line
+	}, []);
 
   return (
     <div className="Pokedex">
